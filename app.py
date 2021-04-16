@@ -9,6 +9,7 @@ werkzeug.cached_property = werkzeug.utils.cached_property
 
 from restapi.restplus import api
 from restapi.endpoints.health import ns as health_ns
+from restapi.endpoints.events import ns as events_ns
 
 from db import db
 from models.event import Event
@@ -36,6 +37,7 @@ manager.add_command('db', MigrateCommand)
 blueprint = Blueprint('api', MYNAME, url_prefix='/api')
 api.init_app(blueprint)
 api.add_namespace(health_ns)
+api.add_namespace(events_ns)
 app.register_blueprint(blueprint)
 
 if __name__ == '__main__':

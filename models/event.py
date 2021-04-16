@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from db import db
@@ -26,7 +26,7 @@ class Event(db.Model):
         Class constructor
         """
         self.component = data.get('component')
-        self.created_at = date.utcnow()
+        self.created_at = datetime.utcnow().date()
         self.data = data.get('data')
         self.email = data.get('email')
         self.environment = data.get('environment')

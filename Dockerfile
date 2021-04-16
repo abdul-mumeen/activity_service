@@ -2,9 +2,9 @@ FROM python:3
 LABEL maintainer="olasodeadeyemi@gmail.com"
 LABEL description="Activity service for saving and retrieving historical events"
 
-WORKDIR /
+WORKDIR /usr/src/service
 
-COPY . /
+COPY . /usr/src/service
 
 RUN pip install -r requirements.txt
 
