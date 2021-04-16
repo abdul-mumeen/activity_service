@@ -26,43 +26,11 @@ class Event(db.Model):
         Class constructor
         """
         self.component = data.get('component')
-        self.created_at = datetime.utcnow().date()
+        self.created_at = datetime.utcnow()
         self.data = data.get('data')
         self.email = data.get('email')
         self.environment = data.get('environment')
         self.message = data.get('message')
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self, data):
-        for key, item in data.items():
-            setattr(self, key, item)
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    @staticmethod
-    def get_events():
-        return Event.query.all()
-
-    @staticmethod
-    def get_event(id):
-        return Event.query.get(id)
-
     def __repr(self):
         return '<id {}>'.format(self.id)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'component': self.component,
-            'created_at': self.created_at,
-            'data': self.data,
-            'email': self.email,
-            'environment': self.environment,
-            'message': self.message,
-        }

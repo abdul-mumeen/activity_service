@@ -2,12 +2,11 @@
 Event API /events endpoint.
 """
 import logging
-import string
-import json
-from flask import request, json
+from datetime import datetime
+from flask import request
 from flask_restplus import Resource, fields, abort
 from ..restplus import api
-from models.event import Event
+from services.events import save_event, get_events
 
 log = logging.getLogger(__name__)
 
@@ -50,6 +49,22 @@ events_response_model = api.model(
     })
 
 
+def event_to_resource(event):
+    return {
+        'id': event.id,
+        'component': event.component,
+        'created_at': datetime.timestamp(event.created_at),
+        'data': event.data,
+        'email': event.email,
+        'environment': event.environment,
+        'message': event.message,
+    }
+
+
+def events_to_resources(events):
+    return [event_to_resource(event) for event in events]
+
+
 @ns.route('/')
 class EventsResource(Resource):
     @ns.marshal_with(events_response_model)
@@ -59,39 +74,23 @@ class EventsResource(Resource):
 
         events = []
         try:
-            events = Event.get_events()
+            events = get_events()
         except Exception as e:
             log.exception(e)
             abort(400, f'Unable to retrieve events ${e}')
 
-        events_data_list = [event.to_dict() for event in events]
-
-        return {'events': events_data_list}, 200
+        return {'events': events_to_resources(events)}, 200
 
     @ns.expect(event_post_request_model, validate=True)
     @ns.marshal_with(event_response_model)
     def post(self):
+        """Create an event"""
+        log.info(f'POST /events')
         request_payload = request.get_json()
-
-        component = request_payload.get('component')
-        data = request_payload.get('data')
-        email = request_payload.get('email')
-        environment = request_payload.get('environment')
-        message = request_payload.get('message')
-
-        request_data = {
-            'component': component,
-            'data': data,
-            'email': email,
-            'environment': environment,
-            'message': message
-        }
-
         try:
-            event = Event(request_data)
-            event.save()
+            event = save_event(request_payload)
         except Exception as e:
             log.exception(e)
             abort(500, e)
 
-        return event.to_dict(), 201
+        return event_to_resource(event), 201
