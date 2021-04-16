@@ -6,7 +6,6 @@ WORKDIR /
 
 COPY . /
 
-# RUN apt-get -y install postgresql-client
 RUN pip install -r requirements.txt
 
 EXPOSE 5000
