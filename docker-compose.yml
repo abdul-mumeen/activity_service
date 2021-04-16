@@ -1,0 +1,32 @@
+version: "3"
+services:
+  activity:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    ports:
+      - "5000:5000"
+    container_name: activity
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5431:5431"
+    volumes:
+      - activity_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  activity_db_data:
