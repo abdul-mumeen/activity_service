@@ -67,6 +67,14 @@ def events_to_resources(events):
 
 @ns.route('/')
 class EventsResource(Resource):
+    @ns.doc(
+        params={
+            'email': 'Email associated with events to retrieve',
+            'environment': 'Environment the events happend in',
+            'component': 'Types of events to get',
+            'message': 'Text in event messages',
+            'from_date': 'Date from which to retrieve events e.g. 2/13/2020',
+        })
     @ns.marshal_with(events_response_model)
     def get(self):
         """Get multiple events resource"""
@@ -74,10 +82,10 @@ class EventsResource(Resource):
 
         events = []
         try:
-            events = get_events()
+            events = get_events(request.args)
         except Exception as e:
             log.exception(e)
-            abort(400, f'Unable to retrieve events ${e}')
+            abort(500, 'Unable to retrieve events')
 
         return {'events': events_to_resources(events)}, 200
 
