@@ -85,7 +85,7 @@ class EventsResource(Resource):
             events = get_events(request.args)
         except Exception as e:
             log.exception(e)
-            abort(500, 'Unable to retrieve events')
+            abort(404, {'error': 'Unable to retrieve events'})
 
         return {'events': events_to_resources(events)}, 200
 
@@ -99,6 +99,6 @@ class EventsResource(Resource):
             event = save_event(request_payload)
         except Exception as e:
             log.exception(e)
-            abort(500, e)
+            abort(400, {'error': e})
 
         return event_to_resource(event), 201
