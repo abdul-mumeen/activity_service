@@ -26,7 +26,6 @@ class Event(db.Model):
         Class constructor
         """
         self.component = data.get('component')
-        # self.created_at = datetime.utcnow()
         self.data = data.get('data')
         self.email = data.get('email')
         self.environment = data.get('environment')
