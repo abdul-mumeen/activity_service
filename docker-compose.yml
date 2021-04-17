@@ -7,6 +7,8 @@ services:
     volumes:
       - .:/usr/src/service
     env_file: .env
+    environment:
+      - ENV_MODE=${ENV_MODE}
     ports:
       - "5000:5000"
     container_name: activity

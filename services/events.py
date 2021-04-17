@@ -3,7 +3,8 @@ import re
 from datetime import datetime
 from db import db
 from models.event import Event
-from flask_restplus import abort
+
+# All BUSINESS logics live here.
 
 
 def validate_event_request_data(component, data, email, environment, message):
@@ -11,11 +12,11 @@ def validate_event_request_data(component, data, email, environment, message):
                       email)):
         raise Exception('Invalid email address.')
 
-    if not (component and component.trim()):
+    if not (component and component.strip()):
         raise Exception('Component can not be empty.')
-    if not (environment and environment.trim()):
+    if not (environment and environment.strip()):
         raise Exception('Environment can not be empty.')
-    if not (message and message.trim()):
+    if not (message and message.strip()):
         raise Exception('Message can not be empty.')
     try:
         json.dumps(data)
@@ -34,7 +35,7 @@ def save_event(request_payload):
         validate_event_request_data(component, data, email, environment,
                                     message)
     except Exception as e:
-        abort(400, e)
+        raise Exception(f'Failed with {str(e)}')
 
     request_data = {
         'component': component,
@@ -45,7 +46,7 @@ def save_event(request_payload):
     }
 
     event = Event(request_data)
-    save_changes(event)
+    event.save()
     return event
 
 
@@ -70,10 +71,5 @@ def get_events(params):
             from_date_object = datetime.strptime(from_date, '%m-%d-%Y')
             query = query.filter(Event.created_at >= from_date_object)
         except Exception as e:
-            abort(400, 'Invalid date specified.')
+            raise Exception('Invalid date specified.')
     return query.all()
-
-
-def save_changes(event):
-    db.session.add(event)
-    db.session.commit()
