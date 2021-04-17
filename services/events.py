@@ -12,11 +12,11 @@ def validate_event_request_data(component, data, email, environment, message):
                       email)):
         raise Exception('Invalid email address.')
 
-    if not (component and component.trim()):
+    if not (component and component.strip()):
         raise Exception('Component can not be empty.')
-    if not (environment and environment.trim()):
+    if not (environment and environment.strip()):
         raise Exception('Environment can not be empty.')
-    if not (message and message.trim()):
+    if not (message and message.strip()):
         raise Exception('Message can not be empty.')
     try:
         json.dumps(data)
@@ -35,7 +35,7 @@ def save_event(request_payload):
         validate_event_request_data(component, data, email, environment,
                                     message)
     except Exception as e:
-        raise Exception(f'Failed with {e}')
+        raise Exception(f'Failed with {str(e)}')
 
     request_data = {
         'component': component,

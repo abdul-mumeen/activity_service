@@ -73,7 +73,7 @@ class EventsResource(Resource):
             'environment': 'Environment the events happend in',
             'component': 'Types of events to get',
             'message': 'Text in event messages',
-            'from_date': 'Date from which to retrieve events e.g. 2/13/2020',
+            'from_date': 'Date from which to retrieve events e.g. 2-13-2020',
         })
     @ns.marshal_with(events_response_model)
     def get(self):
@@ -85,7 +85,7 @@ class EventsResource(Resource):
             events = get_events(request.args)
         except Exception as e:
             log.exception(e)
-            abort(404, {'error': 'Unable to retrieve events'})
+            abort(404, f'Unable to retrieve events - {str(e)}')
 
         return {'events': events_to_resources(events)}, 200
 
@@ -99,6 +99,6 @@ class EventsResource(Resource):
             event = save_event(request_payload)
         except Exception as e:
             log.exception(e)
-            abort(400, {'error': e})
+            abort(400, str(e))
 
         return event_to_resource(event), 201
