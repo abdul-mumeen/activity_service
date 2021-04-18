@@ -3,7 +3,6 @@
 set -euo pipefail
 
 if [ "dev" = $ENV_MODE ]; then
-    flask db migrate
     flask db upgrade
 fi
 
