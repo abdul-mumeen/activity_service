@@ -1,6 +1,6 @@
 # activity_service
 
-This is a simple activity service for saving and retrieving historical events. This service has just two endpoints `/heath` and `/events`. The `/events` is the main endpoint while the `/health` is miscellenaus. Schema for the endpoints are as below;
+This is a simple activity service for saving and retrieving historical events. This service has just two endpoints `/heath` and `/events`. The `/events` is the main endpoint while the `/health` is miscellaneous. Schema for the endpoints are as below;
 
 - `GET /heath` - This endpoint is provided for pinging the service to check if it is up or not.
   response:
@@ -11,7 +11,7 @@ This is a simple activity service for saving and retrieving historical events. T
   }
   ```
 
-- `GET /events` - This returns a list of historical events based on the query params supplied. When there no query params is supplied for filtering, it returns all events in the database.
+- `GET /events` - This returns a list of historical events based on the query params supplied. When there is no query params supplied for filtering, it returns all events in the database.
 
   request:
   `/events/?email=ade%40gmail.com&environment=production&component=order&message=failed&from_date=04-16-2021`
@@ -151,7 +151,7 @@ This is the data layer where the type of data to be stored in the database is de
 
 ### Endpoints (views)
 
-This layer represents the views in our MVC structure as this is where input data are collected and also responsible for formatting and sending out responses to user's input. User's input and responses are also validated on this layer using `expect` and `marshalling` from flask-restplus.
+This layer represents the views in our MVC structure as this is where input data are collected and also responsible for formatting and sending out responses to the user's input. User's input and responses are also validated on this layer using `expect` and `marshalling` from flask-restplus.
 
 ### Services (Controllers)
 
@@ -196,7 +196,7 @@ In the case of activity service, we will be passing different data values to the
 
 ## Handling 100 activity per second
 
-When there are over hundred activity happening per second on the database, this could caused deadlock or overload of the database. There are a couple of ways to mitigate this which include caching, queue system, load balancing and use of NoSQL.
+When there are over a hundred activities happening per second on the database, this could cause deadlock of the database. There are a couple of ways to mitigate this which include caching, queue system, load balancing and use of NoSQL.
 
 ### Caching
 
@@ -204,8 +204,8 @@ A cache can be implemented for read activity to the database using Redis. In the
 
 ### Queue
 
-A queue system can be placed between controller and the data layer such that every post request goes into the queue and when one is not done, the next one does not get executed. This way, the database only gets one request at a time.
+A queue system can be placed between the controller and the data layer such that every post request goes into the queue and when one is not done, the next one does not get executed. This way, the database only gets one request at a time.
 
 ### NoSQL
 
-Using a non-relational database in place of postgresql would be another option to consider if the request are just over 100 since they have tendency of handling high volume of multiple requests due to their nature.
+Using a non-relational database in place of postgresql would be another option to consider if the requests are just over 100 since they have a tendency of handling high volume of multiple requests due to their nature.
